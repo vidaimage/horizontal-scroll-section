@@ -5,7 +5,6 @@
   <title>Horizontal Scroll Section</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* Reset basics */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,13 +12,13 @@
     }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
       color: #111827;
       background: #f9fafb;
-      height: 300vh; /* long page to allow scrolling */
     }
 
-    /* First vertical section (before horizontal) */
+    /* First vertical section */
     .intro-section {
       height: 100vh;
       display: flex;
@@ -36,13 +35,15 @@
       line-height: 1.3;
     }
 
-    /* Sticky horizontal scroll section */
+    /* Wrapper that controls how long we "hold" the scroll
+       Make this tall so the sticky section stays pinned for a while */
     .horizontal-wrapper {
       position: relative;
-      height: 100vh; /* how long this section "holds" the scroll */
+      height: 350vh; /* try 300–500vh if you want longer/shorter hold */
       background: #ffffff;
     }
 
+    /* Sticky section that stays fixed while horizontal scroll happens */
     .horizontal-section {
       position: sticky;
       top: 0;
@@ -55,13 +56,14 @@
       align-items: center;
     }
 
-    .horizontal-inner {
+    .horizontal-track {
       display: inline-flex;
       white-space: nowrap;
-      padding-inline: 5vw;
       gap: 4rem;
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      padding-inline: 5vw;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
       font-weight: 600;
+      will-change: transform;
     }
 
     .horizontal-item {
@@ -78,7 +80,7 @@
       margin-bottom: 0.5rem;
     }
 
-    /* Section after horizontal scroll to show "resume" */
+    /* Section after horizontal scroll */
     .after-section {
       height: 100vh;
       display: flex;
@@ -90,39 +92,33 @@
     }
 
     .after-section h2 {
-      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
       max-width: 700px;
       line-height: 1.4;
     }
   </style>
 </head>
 <body>
-  <!-- Top section -->
+  <!-- Top vertical content -->
   <section class="intro-section">
-    <h1>
-      Scroll down to explore how learning can move in a new direction.
-    </h1>
+    <h1>Scroll down. When you reach the band below, your scroll will move the text sideways.</h1>
   </section>
 
-  <!-- Horizontal scroll section -->
+  <!-- Horizontal scroll “scene” -->
   <section class="horizontal-wrapper">
     <div class="horizontal-section">
-      <div id="horizontalTrack" class="horizontal-inner">
+      <div class="horizontal-track" id="horizontalTrack">
         <div class="horizontal-item">
-          <span class="accent">Deep Work</span>
-          Focused learning without distractions.
+          <span class="accent">AI & Deep Work</span>
+          Focused learning without distraction.
         </div>
         <div class="horizontal-item">
-          <span class="accent">AI Support</span>
-          Smart guidance that adapts as students grow.
+          <span class="accent">Guided by Teachers</span>
+          Real humans at the center of every journey.
         </div>
         <div class="horizontal-item">
-          <span class="accent">Human Teachers</span>
-          Real relationships at the heart of every lesson.
-        </div>
-        <div class="horizontal-item">
-          <span class="accent">Faith & Wisdom</span>
-          Education grounded in purpose and calling.
+          <span class="accent">Faith & Calling</span>
+          Learning rooted in purpose, not just performance.
         </div>
         <div class="horizontal-item">
           <span class="accent">Future Ready</span>
@@ -132,53 +128,21 @@
     </div>
   </section>
 
-  <!-- Bottom section -->
+  <!-- Bottom vertical content -->
   <section class="after-section">
     <h2>
-      Vertical scrolling continues here. This whole page can be embedded inside
-      Google Sites as a horizontal-scroll feature.
+      Once the words finish sliding, your scroll continues down like a normal page.
     </h2>
   </section>
 
   <script>
-    // Scroll-driven horizontal movement
     const wrapper = document.querySelector(".horizontal-wrapper");
     const track = document.getElementById("horizontalTrack");
 
-    // Calculate total scrollable width of the horizontal content
     function getMaxTranslateX() {
       const trackWidth = track.scrollWidth;
       const viewportWidth = window.innerWidth;
       return Math.max(trackWidth - viewportWidth, 0);
     }
 
-    function handleScroll()      {
-      if (!wrapper) return;
-
-      const rect = wrapper.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-
-      // Distance from top of viewport to wrapper top (negative once passed)
-      const start = rect.top;
-      const end = rect.bottom - viewportHeight;
-
-      // Only animate while the horizontal section is actively in view
-      if (start <= 0 && end >= 0) {
-        // Normalize progress between 0 and 1
-        const total = rect.height - viewportHeight;
-        const rawProgress = Math.abs(start) / (total || 1);
-        const progress = Math.min(Math.max(rawProgress, 0), 1);
-
-        const maxX = getMaxTranslateX();
-        const translateX = -maxX * progress;
-
-        track.style.transform = `translateX(${translateX}px)`;
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", handleScroll);
-    window.addEventListener("load", handleScroll);
-  </script>
-</body>
-</html>
+    fu
