@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Horizontal Scroll Section</title>
+  <title>Horizontal Scroll Section (Embed-Friendly)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
@@ -11,16 +11,33 @@
       padding: 0;
     }
 
+    html, body {
+      height: 100%;
+    }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
       color: #111827;
-      background: #f9fafb;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    /* This is the internal scroll container that will work inside an iframe */
+    .frame {
+      width: 100%;
+      max-width: 1200px;
+      height: 100vh;              /* visible area inside iframe */
+      background: #ffffff;
+      overflow-y: auto;           /* WE scroll THIS, not the window */
+      border: 1px solid #e5e7eb;
     }
 
     /* Top vertical section */
     .intro-section {
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -35,12 +52,91 @@
       line-height: 1.3;
     }
 
-    /* Wrapper that defines how long the sticky effect lasts  */
+    /* Wrapper that defines how long the horizontal effect lasts
+       (this is inside the scroll container now) */
     .horizontal-wrapper {
       position: relative;
-      height: 300vh; /* increase to 400–500vh for longer horizontal travel */
+      height: 300vh; /* adjust for longer/shorter horizontal travel */
       background: #ffffff;
     }
 
-    /* Sticky band that stays pinned while we "scrub" horizontally */
-    .h
+    /* Sticky band relative to the scroll container */
+    .horizontal-section {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .horizontal-track {
+      display: inline-flex;
+      white-space: nowrap;
+      gap: 4rem;
+      padding-inline: 5vw;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 600;
+      will-change: transform;
+      min-width: 220vw; /* make sure it's wider than screen so movement is obvious */
+    }
+
+    .horizontal-item {
+      flex: 0 0 auto;
+      padding-block: 1rem;
+    }
+
+    .accent {
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 0.8em;
+      opacity: 0.7;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Bottom vertical section */
+    .after-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      background: #e5e7eb;
+    }
+
+    .after-section h2 {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      max-width: 700px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="frame" id="scroller">
+    <!-- Top vertical content -->
+    <section class="intro-section">
+      <h1>
+        Scroll inside this section. When you reach the white band, your scroll
+        will move the words sideways before continuing down.
+      </h1>
+    </section>
+
+    <!-- Horizontal scroll scene -->
+    <section class="horizontal-wrapper" id="hWrapper">
+      <div class="horizontal-section">
+        <div class="horizontal-track" id="horizontalTrack">
+          <div class="horizontal-item">
+            <span class="accent">Deep Work</span>
+            Focused learning without distraction.
+          </div>
+          <div class="horizontal-item">
+            <span class="accent">AI Support</span>
+            Smart guidance as students grow.
+          </div>
+          <div cl
