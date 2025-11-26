@@ -2,203 +2,166 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Manual Scroll Horizontal Section (Google Sites Compatible)</title>
+  <title>Dynamic Hero Section</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      height: 100%;
-      overflow: hidden; /* Important: iframe cannot scroll */
-      font-family: system-ui, sans-serif;
-    }
-
-    /* The fake scroll container */
-    #viewport {
-      width: 100%;
-      height: 100%;
-      overflow: hidden; /* No native scroll – we animate manually */
-      background: #ffffff;
-      position: relative;
-    }
-
-    .section {
-      width: 100%;
-      height: 100vh;
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: #0f172a; /* dark navy */
+      color: #e5e7eb;
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 2rem;
-      text-align: center;
-      font-size: 2rem;
-      color: #111;
+      justify-content: center;
+      min-height: 100vh;
     }
 
-    .intro {
-      background: #e5e7eb;
-    }
-
-    /* Horizontal section */
-    .horizontal {
-      background: #fff;
+    .hero {
       position: relative;
+      max-width: 900px;
+      padding: 3rem 2.5rem;
+      border-radius: 1.5rem;
+      background: radial-gradient(circle at top left, #1d4ed8, #020617 60%);
       overflow: hidden;
     }
 
-    #track {
+    .chips {
       position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      white-space: nowrap;
-      font-size: 2rem;
-      font-weight: 600;
-      display: inline-flex;
-      gap: 4rem;
-      padding-inline: 4rem;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.4;
     }
 
-    .after {
-      background: #e5e7eb;
+    .chip {
+      position: absolute;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      font-size: 0.75rem;
+      border: 1px solid rgba(148,163,184,0.5);
+      animation: float 10s ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    .chip:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+    .chip:nth-child(2) { top: 25%; right: 8%; animation-delay: 2s; }
+    .chip:nth-child(3) { bottom: 18%; left: 12%; animation-delay: 4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #bfdbfe;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+      max-width: 550px;
+      color: #e5e7eb;
+      opacity: 0.9;
+      margin-bottom: 1.6rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.7rem 1.4rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #fbbf24;
+      color: #111827;
+      font-weight: 600;
+      transition: transform 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      background: #facc15;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      opacity: 0.75;
+    }
+
+    .extra {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    .extra.open {
+      max-height: 200px;
     }
   </style>
 </head>
 <body>
-
-<div id="viewport" tabindex="0">
-  <div class="section intro">
-    Scroll (trackpad / mouse), use ↑ ↓ keys, or swipe on touch.
-    Inside Google Sites, this section will still work.
-  </div>
-
-  <div class="section horizontal">
-    <div id="track">
-      <div>Deep Work</div>
-      <div>AI Support</div>
-      <div>Human Teachers</div>
-      <div>Faith &amp; Calling</div>
-      <div>Future Ready</div>
+  <section class="hero">
+    <div class="chips">
+      <div class="chip">AI-powered guidance</div>
+      <div class="chip">Christ-centered purpose</div>
+      <div class="chip">Deep work, not busy work</div>
     </div>
-  </div>
 
-  <div class="section after">
-    Done! Your scroll/keys now move to the final section.
-  </div>
-</div>
+    <div class="content">
+      <div class="eyebrow">The Genesis School</div>
+      <h1>Where faith, wisdom, and AI meet in the classroom.</h1>
+      <p>
+        Students don’t just memorize content. They practice deep work, guided by
+        teachers and supported by AI that adapts to how God uniquely designed them
+        to learn.
+      </p>
 
-<script>
-  // State
-  let currentSection = 0; // 0 = intro, 1 = horizontal, 2 = after
-  let horizontalProgress = 0;
+      <div class="actions">
+        <button id="learnMoreBtn">How does this actually work?</button>
+        <span class="note">Click to reveal a short explanation.</span>
+      </div>
 
-  const viewport = document.getElementById("viewport");
-  const track = document.getElementById("track");
+      <div id="extraText" class="extra">
+        Our system helps students focus on one meaningful task at a time. AI assists
+        with explanations, practice, and feedback—while human teachers mentor hearts,
+        shape character, and connect learning to a bigger calling.
+      </div>
+    </div>
+  </section>
 
-  const SECTIONS = 3;
-  const H_SCROLL_LENGTH = 2000; // pixels to move sideways
+  <script>
+    const btn = document.getElementById("learnMoreBtn");
+    const extra = document.getElementById("extraText");
 
-  function clamp(val, min, max) {
-    return Math.min(max, Math.max(min, val));
-  }
-
-  function updateView() {
-    // Move vertically between sections manually
-    viewport.style.transform =
-      `translateY(${-currentSection * window.innerHeight}px)`;
-
-    // Move horizontal track when in section 1
-    if (currentSection === 1) {
-      track.style.transform =
-        `translate(${ -horizontalProgress }px, -50%)`;
-    }
-  }
-
-  function applyDelta(deltaY) {
-    if (currentSection === 1) {
-      // In horizontal section: scroll moves sideways
-      horizontalProgress += deltaY;
-      horizontalProgress = clamp(horizontalProgress, 0, H_SCROLL_LENGTH);
-
-      // If we've reached the end, move to the last section
-      if (horizontalProgress >= H_SCROLL_LENGTH && deltaY > 0) {
-        horizontalProgress = 0;
-        currentSection = 2;
-      }
-
-    } else {
-      // In intro or after: scroll moves between sections
-      if (deltaY > 0) {
-        currentSection = Math.min(SECTIONS - 1, currentSection + 1);
-      } else if (deltaY < 0) {
-        currentSection = Math.max(0, currentSection - 1);
-      }
-    }
-
-    updateView();
-  }
-
-  // 1) Mouse wheel & trackpad scroll
-  window.addEventListener("wheel", (e) => {
-    e.preventDefault(); // block parent page scroll (Google Sites)
-    applyDelta(e.deltaY);
-  }, { passive: false });
-
-  // 2) Keyboard support (arrow keys, page up/down, space)
-  window.addEventListener("keydown", (e) => {
-    // Make sure events are focused on our viewport
-    // (click once in the area if needed)
-    let delta = 0;
-    switch (e.key) {
-      case "ArrowDown":
-      case "PageDown":
-      case " ":
-        delta = 80;
-        break;
-      case "ArrowUp":
-      case "PageUp":
-        delta = -80;
-        break;
-      default:
-        return; // ignore other keys
-    }
-    e.preventDefault();
-    applyDelta(delta);
-  });
-
-  // 3) Touch support (swipe up/down)
-  let touchStartY = null;
-
-  window.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 1) {
-      touchStartY = e.touches[0].clientY;
-    }
-  }, { passive: true });
-
-  window.addEventListener("touchmove", (e) => {
-    if (touchStartY === null) return;
-    const currentY = e.touches[0].clientY;
-    const deltaY = touchStartY - currentY; // swipe up -> positive
-    if (Math.abs(deltaY) < 5) return; // ignore tiny moves
-
-    e.preventDefault();
-    applyDelta(deltaY);
-    touchStartY = currentY;
-  }, { passive: false });
-
-  window.addEventListener("touchend", () => {
-    touchStartY = null;
-  });
-
-  // Initial render
-  updateView();
-
-  // Ensure viewport can receive keyboard focus
-  viewport.focus();
-</script>
-
+    btn.addEventListener("click", () => {
+      extra.classList.toggle("open");
+    });
+  </script>
 </body>
 </html>
