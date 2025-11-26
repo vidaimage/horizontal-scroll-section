@@ -18,7 +18,7 @@
       background: #f9fafb;
     }
 
-    /* First vertical section */
+    /* Top vertical section */
     .intro-section {
       height: 100vh;
       display: flex;
@@ -35,15 +35,14 @@
       line-height: 1.3;
     }
 
-    /* Wrapper that controls how long we "hold" the scroll
-       Make this tall so the sticky section stays pinned for a while */
+    /* Wrapper that holds the sticky horizontal scene */
     .horizontal-wrapper {
       position: relative;
-      height: 350vh; /* try 300–500vh if you want longer/shorter hold */
+      height: 300vh; /* controls how long the sticky effect lasts */
       background: #ffffff;
     }
 
-    /* Sticky section that stays fixed while horizontal scroll happens */
+    /* Sticky band */
     .horizontal-section {
       position: sticky;
       top: 0;
@@ -54,6 +53,7 @@
       background: #ffffff;
       display: flex;
       align-items: center;
+      justify-content: flex-start;
     }
 
     .horizontal-track {
@@ -64,6 +64,7 @@
       font-size: clamp(1.8rem, 3vw, 2.4rem);
       font-weight: 600;
       will-change: transform;
+      transition: transform 0.05s linear;
     }
 
     .horizontal-item {
@@ -80,7 +81,7 @@
       margin-bottom: 0.5rem;
     }
 
-    /* Section after horizontal scroll */
+    /* Bottom vertical section */
     .after-section {
       height: 100vh;
       display: flex;
@@ -101,20 +102,27 @@
 <body>
   <!-- Top vertical content -->
   <section class="intro-section">
-    <h1>Scroll down. When you reach the band below, your scroll will move the text sideways.</h1>
+    <h1>
+      Scroll down. When you reach the white band, your scroll will move the
+      words sideways before the page continues down.
+    </h1>
   </section>
 
-  <!-- Horizontal scroll “scene” -->
+  <!-- Horizontal scroll scene -->
   <section class="horizontal-wrapper">
     <div class="horizontal-section">
       <div class="horizontal-track" id="horizontalTrack">
         <div class="horizontal-item">
-          <span class="accent">AI & Deep Work</span>
+          <span class="accent">Deep Work</span>
           Focused learning without distraction.
         </div>
         <div class="horizontal-item">
-          <span class="accent">Guided by Teachers</span>
-          Real humans at the center of every journey.
+          <span class="accent">AI Support</span>
+          Smart guidance as students grow.
+        </div>
+        <div class="horizontal-item">
+          <span class="accent">Human Teachers</span>
+          Real relationships at the heart of every lesson.
         </div>
         <div class="horizontal-item">
           <span class="accent">Faith & Calling</span>
@@ -131,18 +139,50 @@
   <!-- Bottom vertical content -->
   <section class="after-section">
     <h2>
-      Once the words finish sliding, your scroll continues down like a normal page.
+      You've reached the end of the horizontal scene. Scrolling continues
+      normally from here.
     </h2>
   </section>
 
   <script>
-    const wrapper = document.querySelector(".horizontal-wrapper");
-    const track = document.getElementById("horizontalTrack");
+    (function () {
+      const wrapper = document.querySelector(".horizontal-wrapper");
+      const track = document.getElementById("horizontalTrack");
 
-    function getMaxTranslateX() {
-      const trackWidth = track.scrollWidth;
-      const viewportWidth = window.innerWidth;
-      return Math.max(trackWidth - viewportWidth, 0);
-    }
+      if (!wrapper || !track) return;
 
-    fu
+      function getMaxTranslateX() {
+        const trackWidth = track.scrollWidth;
+        const viewportWidth = window.innerWidth;
+        return Math.max(trackWidth - viewportWidth, 0);
+      }
+
+      function handleScroll() {
+        const sectionTop = wrapper.offsetTop;
+        const sectionHeight = wrapper.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        const scrollY = window.scrollY || window.pageYOffset;
+
+        // range where the sticky band is active
+        const start = sectionTop;
+        const end = sectionTop + sectionHeight - viewportHeight;
+
+        if (scrollY < start || scrollY > end) {
+          // outside active area → do nothing (keeps last position)
+          return;
+        }
+
+        const progress = (scrollY - start) / (end - start); // 0 → 1
+        const maxX = getMaxTranslateX();
+        const translateX = -maxX * progress;
+
+        track.style.transform = `translateX(${translateX}px)`;
+      }
+
+      window.addEventListener("scroll", handleScroll);
+      window.addEventListener("resize", handleScroll);
+      window.addEventListener("load", handleScroll);
+    })();
+  </script>
+</body>
+</html>
